@@ -1,0 +1,41 @@
+/* Основной контейнер */
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Занимает всю высоту экрана */
+  font-family: Arial, sans-serif;
+}
+
+/* Панель навигации */
+.navbar {
+  width: 100%; /* Занимает всю ширину экрана */
+  background-color: #333; /* Цвет фона */
+  padding: 10px 20px; /* Отступы внутри панели */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень */
+  display: flex;
+  justify-content: flex-start; /* Элементы выравниваются по левому краю */
+  align-items: center; /* Элементы выравниваются по вертикали */
+}
+
+/* Ссылки в навигации */
+.nav-link {
+  color: white; /* Цвет текста */
+  text-decoration: none; /* Убираем подчеркивание */
+  margin-right: 20px; /* Отступ между ссылками */
+  font-size: 18px; /* Размер текста */
+  transition: color 0.3s ease; /* Плавное изменение цвета */
+}
+
+.nav-link:hover {
+  color: #61dafb; /* Цвет при наведении */
+}
+
+/* Основное содержимое */
+.main-content {
+  flex-grow: 1; /* Занимает оставшееся пространство */
+  width: 100%; /* Занимает всю ширину экрана */
+  display: flex;
+  justify-content: center; /* Центрирование по горизонтали */
+  align-items: center; /* Центрирование по вертикали */
+  padding: 20px; /* Отступы внутри контейнера */
+}

@@ -1,0 +1,26 @@
+.footer {
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    margin-top: auto; /* Чтобы футер прижимался к низу, если контента мало */
+  }
+  
+  .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .footer-nav {
+    margin-top: 10px;
+  }
+  
+  .footer-link {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+  }
+  
+  .footer-link:hover {
+    text-decoration: underline;
+  }

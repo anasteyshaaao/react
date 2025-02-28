@@ -1,0 +1,69 @@
+.header {
+    background-color: #333;
+    
+  }
+  
+  .navbar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .nav-link {
+    color: white;
+    text-decoration: none;
+    padding: 8px 12px;
+  }
+  
+  .nav-link:hover {
+    background-color: #555;
+    border-radius: 4px;
+  }
+  
+  .dropdown {
+    position: relative;
+  }
+  
+  .dropdown-toggle {
+    background-color: transparent;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .dropdown-toggle:hover {
+    background-color: #555;
+    border-radius: 4px;
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #444;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: none; /* Скрываем список по умолчанию */
+  }
+  
+  .dropdown:hover .dropdown-menu {
+    display: block; /* Показываем список при наведении на .dropdown */
+  }
+  
+  .dropdown-item {
+    display: block;
+    padding: 8px 12px;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .dropdown-item:hover {
+    background-color: #555;
+    border-radius: 4px;
+  }
