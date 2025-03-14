@@ -1,0 +1,22 @@
+
+.container {
+  padding: 20px; 
+  border-radius: 8px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  width: 100%; 
+  max-width: 1200px; 
+  text-align: center;
+
+}
+
+
+.light-theme .container {
+  background-color: #f9f9f9; 
+  color: #000; 
+}
+
+
+.dark-theme .container {
+  background-color: #444; 
+  color: #fff;
+}

@@ -1,0 +1,18 @@
+.custom-button {
+  background-color: #61dafb; /* Цвет фона */
+  color: white; /* Цвет текста */
+  border: none; /* Убираем границу */
+  padding: 10px 20px; /* Внутренние отступы */
+  font-size: 16px; /* Размер текста */
+  border-radius: 5px; /* Закругленные углы */
+  cursor: pointer; /* Курсор в виде указателя */
+  transition: background-color 0.3s ease; /* Плавное изменение цвета */
+}
+
+.custom-button:hover {
+  background-color: #21a1f1; /* Цвет фона при наведении */
+}
+
+.custom-button:active {
+  transform: scale(0.95); /* Уменьшение кнопки при нажатии */
+}

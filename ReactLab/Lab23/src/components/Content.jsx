@@ -1,6 +1,6 @@
 import React from 'react';
 import Container from './Container'; // Импортируем ваш существующий компонент Container
-import './Content.css'; // Опционально: стили для Content
+import './css/Content.css'; // Опционально: стили для Content
 
 function Content({ children }) {
   return (

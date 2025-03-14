@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Lab1.css'; // Подключаем стили
+import './css/Lab1.css'; // Подключаем стили
 
 function LabWork1() {
   // Состояние для счетчика
