@@ -4,8 +4,8 @@ import { useSelector, useDispatch } from 'react-redux'; // Импортируе�
 import { increment, decrement } from '../counterSlice.jsx'; // Импортируем actions
 
 function ReduxCounter() {
-  const count = useSelector((state) => state.counter.value); // Получаем состояние счетчика
-  const dispatch = useDispatch(); // Получаем dispatch для вызова actions
+  const count = useSelector((state) => state.counter.value); // состояние счетчика
+  const dispatch = useDispatch(); // dispatch для вызова actions
 
   return (
     <div>

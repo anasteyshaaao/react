@@ -4,6 +4,6 @@ import counterReducer from './features/counter/counterSlice.jsx'; // Импор�
 // Создаем хранилище
 export const store = configureStore({
   reducer: {
-    counter: counterReducer, // Подключаем редюсер счетчика
+    counter: counterReducer, // вкл редюсер счетчика
   },
 });

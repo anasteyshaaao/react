@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
-import { useForm } from 'react-hook-form';
+import { useController, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import './css/AuthForm.css'; // Подключаем стили
-
+ //useController реализовать для компонента ввода имени  вставить обратную связь при нажатии в модальном окне 
 const AuthForm = ({ isLogin, onLogin }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const navigate = useNavigate();

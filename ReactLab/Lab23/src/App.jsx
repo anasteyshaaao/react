@@ -12,7 +12,7 @@ import Feedback from './components/Feedback';
 import useLoginState from './redux/useLoginState';
 
 function App() {
-  const { isLoggedIn, login, logout } = useLoginState(); // Используем хук для авторизации
+  const { isLoggedIn, login, logout } = useLoginState(); 
 
   const handleClick = () => {
     alert('Button clicked!');
@@ -34,7 +34,7 @@ function App() {
                     <img src="/start.jpeg" alt="Описание картинки" />
                   </>
                 ) : (
-                  <Navigate to="/auth" /> // Перенаправляем на форму авторизации
+                  <Navigate to="/auth" /> 
                 )
               }
             />
@@ -48,7 +48,7 @@ function App() {
                     <LabWork1 />
                   </>
                 ) : (
-                  <Navigate to="/auth" /> // Перенаправляем на форму авторизации
+                  <Navigate to="/auth" /> 
                 )
               }
             />
@@ -62,7 +62,7 @@ function App() {
                     <Button onClick={handleClick}>Click Me</Button>
                   </>
                 ) : (
-                  <Navigate to="/auth" /> // Перенаправляем на форму авторизации
+                  <Navigate to="/auth" /> 
                 )
               }
             />
@@ -75,7 +75,7 @@ function App() {
                     <img src="/img.jpg" alt="Описание картинки" />
                   </>
                 ) : (
-                  <Navigate to="/auth" /> // Перенаправляем на форму авторизации
+                  <Navigate to="/auth" /> 
                 )
               }
             />
@@ -89,7 +89,7 @@ function App() {
                     <Counter />
                   </>
                 ) : (
-                  <Navigate to="/auth" /> // Перенаправляем на форму авторизации
+                  <Navigate to="/auth" /> 
                 )
               }
             />
@@ -102,7 +102,7 @@ function App() {
             <Route path="/auth" element={<AuthForm isLogin={true} onLogin={login} />} />
             {/* Форма регистрации */}
             <Route path="/register" element={<AuthForm isLogin={false} onLogin={login} />} />
-            {/* Перенаправление на /auth для любых других путей, если пользователь не авторизован */}
+            {/* Перенаправлениеесли пользователь не авторизован */}
             <Route path="*" element={<Navigate to="/auth" />} />
           </Routes>
         </Layout>

@@ -14,7 +14,7 @@ function Footer({ isLoggedIn }) { // Принимаем isLoggedIn через п
   return (
     <footer className="footer">
       <div className="footer-content">
-        <p>© 2023 Мой сайт. Все права защищены.</p>
+        <p>© 2025 Мой сайт. Все права защищены.</p>
 
         {/* Форма обратной связи и отзывы */}
         {isLoggedIn && (

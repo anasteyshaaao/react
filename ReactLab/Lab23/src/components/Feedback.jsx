@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import './css/Feedback.css';
 
-const Feedback = ({ isLoggedIn }) => { // Принимаем isLoggedIn через пропсы
+const Feedback = ({ isLoggedIn }) => { 
   const [feedbacks, setFeedbacks] = useState([]);
   const { register, handleSubmit, reset } = useForm();
 
@@ -12,7 +12,7 @@ const Feedback = ({ isLoggedIn }) => { // Принимаем isLoggedIn чере
   }, [reset]);
 
   if (!isLoggedIn) {
-    return null; // Не отображаем форму и отзывы, если пользователь не авторизован
+    return null; 
   }
 
   return (
