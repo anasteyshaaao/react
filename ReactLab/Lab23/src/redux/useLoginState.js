@@ -1,25 +1,34 @@
-import { useState, useEffect } from 'react';
+// useLoginState.js (или ваш файл с логикой авторизации)
+import { useState } from 'react';
 
 const useLoginState = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // Получаем состояние авторизации из localStorage
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem('isLoggedIn') === 'true'
+  );
 
-  // При загрузке страницы проверяем localStorage
-  useEffect(() => {
-    const loggedIn = localStorage.getItem('isLoggedIn');
-    setIsLoggedIn(loggedIn === 'true'); // Проверяем, что значение не null и равно 'true'
-  }, []);
+  // Получаем имя пользователя из localStorage
+  const [userName, setUserName] = useState(
+    localStorage.getItem('userName') || ''
+  );
 
-  const login = () => {
-    localStorage.setItem('isLoggedIn', 'true'); // Сохраняем статус авторизации
+  const login = (name) => {
     setIsLoggedIn(true);
+    setUserName(name);
+    // Сохраняем состояние в localStorage
+    localStorage.setItem('isLoggedIn', true);
+    localStorage.setItem('userName', name);
   };
 
   const logout = () => {
-    localStorage.setItem('isLoggedIn', 'false'); // Удаляем статус авторизации
     setIsLoggedIn(false);
+    setUserName('');
+    // Удаляем состояние из localStorage
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userName');
   };
 
-  return { isLoggedIn, login, logout };
+  return { isLoggedIn, login, logout, userName };
 };
 
 export default useLoginState;

@@ -1,30 +1,24 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
+import AuthForm from './components/AuthForm';
+import { ThemeProvider } from './components/ThemeContext';
+import useLoginState from './redux/useLoginState';
 import HelloWorld from './components/HelloWorld';
 import Button from './components/Button';
 import LabWork1 from './components/Lab1';
-import { ThemeProvider } from './components/ThemeContext';
 import CounterWithEffect from './components/CounterWithEffect';
 import Counter from './components/Counter';
-import AuthForm from './components/AuthForm';
-import Feedback from './components/Feedback';
-import useLoginState from './redux/useLoginState';
+
 
 function App() {
-  const { isLoggedIn, login, logout } = useLoginState(); 
-
-  const handleClick = () => {
-    alert('Button clicked!');
-  };
+  const { isLoggedIn, login, logout, userName } = useLoginState();
 
   return (
     <ThemeProvider>
       <Router>
-        {/* Навигация доступна всегда */}
-        <Layout isLoggedIn={isLoggedIn} logout={logout}>
+        <Layout isLoggedIn={isLoggedIn} logout={logout} userName={userName}>
           <Routes>
-            {/* Стартовая страница */}
             <Route
               path="/"
               element={
@@ -34,8 +28,26 @@ function App() {
                     <img src="/start.jpeg" alt="Описание картинки" />
                   </>
                 ) : (
-                  <Navigate to="/auth" /> 
+                  <Navigate to="/auth" />
                 )
+              }
+            />
+            <Route
+              path="/auth"
+              element={
+                <AuthForm
+                  isLogin={true}
+                  onLogin={login} // Передаем login для входа
+                />
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <AuthForm
+                  isLogin={false}
+                  onLogin={login} // Передаем login для регистрации
+                />
               }
             />
             {/* Лабораторная работа 1 */}
@@ -44,11 +56,11 @@ function App() {
               element={
                 isLoggedIn ? (
                   <>
-                    <p>Стартовая страница</p>
+                    <p>Лабораторная работа 1</p>
                     <LabWork1 />
                   </>
                 ) : (
-                  <Navigate to="/auth" /> 
+                  <Navigate to="/auth" />
                 )
               }
             />
@@ -58,11 +70,12 @@ function App() {
               element={
                 isLoggedIn ? (
                   <>
+                    <p>Лабораторная работа 2</p>
                     <HelloWorld />
-                    <Button onClick={handleClick}>Click Me</Button>
+                    <Button onClick={() => alert('Button clicked!')}>Click Me</Button>
                   </>
                 ) : (
-                  <Navigate to="/auth" /> 
+                  <Navigate to="/auth" />
                 )
               }
             />
@@ -72,10 +85,11 @@ function App() {
               element={
                 isLoggedIn ? (
                   <>
+                    <p>Лабораторная работа 3</p>
                     <img src="/img.jpg" alt="Описание картинки" />
                   </>
                 ) : (
-                  <Navigate to="/auth" /> 
+                  <Navigate to="/auth" />
                 )
               }
             />
@@ -85,24 +99,17 @@ function App() {
               element={
                 isLoggedIn ? (
                   <>
+                    <p>Лабораторная работа 4</p>
                     <CounterWithEffect />
                     <Counter />
                   </>
                 ) : (
-                  <Navigate to="/auth" /> 
+                  <Navigate to="/auth" />
                 )
               }
             />
-            {/* Форма обратной связи */}
-            <Route
-              path="/feedback"
-              element={isLoggedIn ? <Feedback /> : <Navigate to="/auth" />}
-            />
-            {/* Форма авторизации */}
-            <Route path="/auth" element={<AuthForm isLogin={true} onLogin={login} />} />
-            {/* Форма регистрации */}
-            <Route path="/register" element={<AuthForm isLogin={false} onLogin={login} />} />
-            {/* Перенаправлениеесли пользователь не авторизован */}
+            
+            {/* Перенаправление, если пользователь не авторизован */}
             <Route path="*" element={<Navigate to="/auth" />} />
           </Routes>
         </Layout>
