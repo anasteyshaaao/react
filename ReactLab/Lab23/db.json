@@ -1,0 +1,65 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "admin",
+      "password": "admin123",
+      "isAdmin": true
+    },
+    {
+      "id": "641e",
+      "name": "Саша",
+      "password": "111111",
+      "email": "1rout@mail.ru"
+    },
+    {
+      "id": "3592",
+      "name": "ЕГОР1",
+      "password": "111111",
+      "email": "Egor@krut.ru",
+      "isAdmin": false
+    },
+    {
+      "id": "87ec",
+      "name": "Настя",
+      "password": "123456",
+      "email": "shemonaev@1rout.ru"
+    }
+  ],
+  "feedbacks": [
+    {
+      "id": "49f5",
+      "name": "Алексей",
+      "feedback": "Хороший сайт!",
+      "date": "2025-03-27T06:47:03.016Z"
+    },
+    {
+      "id": "662a",
+      "name": "Егор",
+      "feedback": "Хорошие лабораторные",
+      "date": "2025-03-28T05:59:42.601Z"
+    },
+    {
+      "id": "ab83",
+      "name": "admin",
+      "feedback": "Я теперь администратор! ",
+      "date": "2025-03-28T13:27:18.386Z"
+    },
+    {
+      "id": "66f9",
+      "name": "Настя1234",
+      "feedback": "Хороший сайт",
+      "date": "2025-03-29T03:12:02.333Z"
+    },
+    {
+      "id": "f924",
+      "name": "Настя",
+      "feedback": "копуошугшаушоаоутоа",
+      "date": "2025-03-29T04:05:47.209Z"
+    }
+  ],
+  "auth": {
+    "isLoggedIn": false,
+    "userName": ""
+  }
+}
