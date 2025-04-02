@@ -1,88 +1,109 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchFeedbacks, postFeedback } from '../redux/slices/feedbackSlice';
 import { useForm } from 'react-hook-form';
-import { ThemeContext } from './ThemeContext'; // Импортируем контекст темы
+import { ThemeContext } from './ThemeContext';
 
 function Footer({ isLoggedIn }) {
-  const [feedbacks, setFeedbacks] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Состояние для модального окна
-  const { register, handleSubmit, reset } = useForm();
-  const { isDarkTheme } = useContext(ThemeContext); // Получаем текущую тему из контекста
+  const dispatch = useDispatch();
+  const { items: feedbacks, loading, error } = useSelector(state => state.feedback);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const { isDarkTheme } = useContext(ThemeContext);
 
-  const onSubmit = useCallback((data) => {
-    setFeedbacks((prev) => [...prev, data]);
-    reset();
-    setIsModalOpen(false); // Закрываем модальное окно после отправки
-  }, [reset]);
+  useEffect(() => {
+    if (isLoggedIn) {
+      dispatch(fetchFeedbacks());
+    }
+  }, [isLoggedIn, dispatch]);
 
-  const openModal = () => setIsModalOpen(true); // Открыть модальное окно
-  const closeModal = () => setIsModalOpen(false); // Закрыть модальное окно
+  const onSubmitFeedback = async (data) => {
+    try {
+      await dispatch(postFeedback({
+        ...data,
+        date: new Date().toISOString()
+      })).unwrap();
+      reset();
+      setIsModalOpen(false);
+      dispatch(fetchFeedbacks());
+    } catch (err) {
+      console.error('Ошибка при отправке:', err);
+    }
+  };
 
   return (
-    <footer className={`footer ${isDarkTheme ? 'bg-dark text-light' : 'bg-light text-dark'} py-4`}>
+    <footer className={`py-4 ${isDarkTheme ? 'bg-dark text-light' : 'bg-light text-dark'}`}>
       <div className="container">
-        <div className="text-center">
-          {/* Форма обратной связи и отзывы */}
-          {isLoggedIn && (
-            <div className="feedback-section">
-              {/* Кнопка для открытия модального окна */}
-              <button onClick={openModal} className="btn btn-primary">
-                Оставить отзыв
-              </button>
-
-              {/* Список отзывов (остается в футере) */}
-              {feedbacks.length > 0 && ( // Проверка на наличие отзывов
-                <div className="feedback-list mt-4">
-                  <h4>Последние отзывы</h4>
-                  {feedbacks.map((fb, index) => (
-                    <div key={index} className={`feedback-item card mb-2 ${isDarkTheme ? 'bg-secondary text-light' : ''}`}>
-                      <div className="card-body">
-                        <strong>{fb.name}</strong>: {fb.feedback}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+        {isLoggedIn && (
+          <div className="feedback-section">
+            <div className="d-flex justify-content-center align-items-center mb-4">
+              <h3 className="mb-0">Отзывы пользователей</h3>
             </div>
-          )}
-        </div>
 
-        {/* Модальное окно с формой */}
-        {isModalOpen && (
-          <div className="modal" style={{ display: 'block', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-            <div className="modal-dialog">
-              <div className={`modal-content ${isDarkTheme ? 'bg-dark text-light' : ''}`}>
-                <div className="modal-header">
-                  <h5 className="modal-title">Оставьте отзыв</h5>
-                  <button type="button" className="btn-close" onClick={closeModal} style={isDarkTheme ? { filter: 'invert(1)' } : {}}></button>
+            {loading && <div className="text-center">Загрузка...</div>}
+            {error && <div className={`alert ${isDarkTheme ? 'alert-dark' : 'alert-danger'}`}>{error}</div>}
+
+            <div className="row">
+              {feedbacks.map(feedback => (
+                <div key={feedback.id} className="col-md-4 mb-3">
+                  <div className={`card h-100 ${isDarkTheme ? 'bg-secondary text-white' : ''}`}>
+                    <div className="card-body">
+                      <h5 className="card-title">{feedback.name}</h5>
+                      <p className="card-text">{feedback.feedback}</p>
+                      <small className={isDarkTheme ? 'text-light' : 'text-muted'}>
+                        {new Date(feedback.date).toLocaleString()}
+                      </small>
+                    </div>
+                  </div>
                 </div>
-                <div className="modal-body">
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="mb-3">
-                      <input
-                        {...register('name', { required: true })}
-                        placeholder="Ваше имя"
-                        className={`form-control ${isDarkTheme ? 'bg-secondary text-light' : ''}`}
+              ))}
+            </div>
+
+           
+
+            {isModalOpen && (
+              <div className={`modal fade show d-block ${isDarkTheme ? 'dark-modal' : ''}`}>
+                <div className="modal-dialog">
+                  <div className={`modal-content ${isDarkTheme ? 'bg-dark text-light' : ''}`}>
+                    <div className="modal-header">
+                      <h5 className="modal-title">Оставить отзыв</h5>
+                      <button 
+                        type="button" 
+                        className={`btn-close ${isDarkTheme ? 'btn-close-white' : ''}`}
+                        onClick={() => setIsModalOpen(false)}
                       />
                     </div>
-                    <div className="mb-3">
-                      <textarea
-                        {...register('feedback', { required: true })}
-                        placeholder="Ваш отзыв"
-                        rows="3"
-                        className={`form-control ${isDarkTheme ? 'bg-secondary text-light' : ''}`}
-                      />
+                    <div className="modal-body">
+                      <form onSubmit={handleSubmit(onSubmitFeedback)}>
+                        <div className="mb-3">
+                          <label className="form-label">Ваше имя</label>
+                          <input
+                            {...register('name', { required: 'Обязательное поле' })}
+                            className={`form-control ${errors.name ? 'is-invalid' : ''} ${isDarkTheme ? 'bg-dark text-light' : ''}`}
+                          />
+                          {errors.name && <div className="invalid-feedback">{errors.name.message}</div>}
+                        </div>
+                        <div className="mb-3">
+                          <label className="form-label">Отзыв</label>
+                          <textarea
+                            {...register('feedback', { required: 'Обязательное поле' })}
+                            rows="3"
+                            className={`form-control ${errors.feedback ? 'is-invalid' : ''} ${isDarkTheme ? 'bg-dark text-light' : ''}`}
+                          />
+                          {errors.feedback && <div className="invalid-feedback">{errors.feedback.message}</div>}
+                        </div>
+                        <button type="submit" className="btn btn-primary">
+                          Отправить
+                        </button>
+                      </form>
                     </div>
-                    <button type="submit" className="btn btn-primary">
-                      Отправить
-                    </button>
-                  </form>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         )}
       </div>
-      <p className="text-center mt-4">© 2025 Мой сайт. Все права защищены.</p>
     </footer>
   );
 }

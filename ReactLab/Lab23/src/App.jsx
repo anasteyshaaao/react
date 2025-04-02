@@ -1,23 +1,32 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import Layout from './components/Layout';
 import AuthForm from './components/AuthForm';
 import { ThemeProvider } from './components/ThemeContext';
-import useLoginState from './redux/useLoginState';
 import HelloWorld from './components/HelloWorld';
 import Button from './components/Button';
 import LabWork1 from './components/Lab1';
 import CounterWithEffect from './components/CounterWithEffect';
 import Counter from './components/Counter';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
+import { logout } from './redux/slices/authSlice';
+import EditProfilePage from './components/EditProfilePage';
+import AdminPanel from './components/AdminPanel';
 
+function AppContent() {
+  const dispatch = useDispatch();
+  const { isLoggedIn, userName, isAdmin } = useSelector(state => state.auth);
 
-function App() {
-  const { isLoggedIn, login, logout, userName } = useLoginState();
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   return (
     <ThemeProvider>
       <Router>
-        <Layout isLoggedIn={isLoggedIn} logout={logout} userName={userName}>
+        <Layout isLoggedIn={isLoggedIn} logout={handleLogout} userName={userName}>
           <Routes>
             <Route
               path="/"
@@ -35,22 +44,35 @@ function App() {
             <Route
               path="/auth"
               element={
-                <AuthForm
-                  isLogin={true}
-                  onLogin={login} // Передаем login для входа
-                />
+                <AuthForm isLogin={true} />
+              }
+            />
+            <Route
+              path="/edit-profile"
+              element={
+                isLoggedIn ? (
+                  <EditProfilePage />
+                ) : (
+                  <Navigate to="/auth" />
+                )
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                isLoggedIn && isAdmin ? (
+                  <AdminPanel />
+                ) : (
+                  <Navigate to="/" />
+                )
               }
             />
             <Route
               path="/register"
               element={
-                <AuthForm
-                  isLogin={false}
-                  onLogin={login} // Передаем login для регистрации
-                />
+                <AuthForm isLogin={false} />
               }
             />
-            {/* Лабораторная работа 1 */}
             <Route
               path="/lab1"
               element={
@@ -64,7 +86,6 @@ function App() {
                 )
               }
             />
-            {/* Лабораторная работа 2 */}
             <Route
               path="/lab2"
               element={
@@ -79,7 +100,6 @@ function App() {
                 )
               }
             />
-            {/* Лабораторная работа 3 */}
             <Route
               path="/lab3"
               element={
@@ -93,7 +113,44 @@ function App() {
                 )
               }
             />
-            {/* Лабораторная работа 4 */}
+             <Route
+              path="/lab5"
+              element={
+                isLoggedIn ? (
+                  <>
+                      <h1> Лабораторная работа 5</h1>
+                    <div class="container mt-4">
+                  <ol class="list-group list-group-numbered">
+                    <li class="list-group-item py-3">
+                      Реализовать форму регистрации и форму авторизации с помощью React-hook-forms или Formik (валидация полей)
+                    </li>
+                    <li class="list-group-item py-3">
+                      Реализовать блок обратной связи. Форма обратной связи и список отзывов
+                    </li>
+                    <li class="list-group-item py-3">
+                      Обработать submit форм через useCallback функции по примеру Лабораторной работы 1
+                    </li>
+                    <li class="list-group-item py-3">
+                      Реализовать кастомный хук useLoginState
+                      <ul class="list-unstyled mt-2 ms-3">
+                        <li class="mb-1">• Выдает true / false - статус авторизации</li>
+                        <li>• Если true - отрисовать приложение, иначе форму авторизации</li>
+                      </ul>
+                    </li>
+                    <li class="list-group-item py-3">
+                      Хранить статус авторизации можно в redux, context или localStore
+                    </li>
+                    <li class="list-group-item py-3">
+                      Реализовать в правом верхнем углу профиль пользователя с кнопкой разлогина
+                    </li>
+                  </ol>
+</div>
+                  </>
+                ) : (
+                  <Navigate to="/auth" />
+                )
+              }
+            />
             <Route
               path="/lab4"
               element={
@@ -101,20 +158,25 @@ function App() {
                   <>
                     <p>Лабораторная работа 4</p>
                     <CounterWithEffect />
-                    <Counter />
                   </>
                 ) : (
                   <Navigate to="/auth" />
                 )
               }
             />
-            
-            {/* Перенаправление, если пользователь не авторизован */}
             <Route path="*" element={<Navigate to="/auth" />} />
           </Routes>
         </Layout>
       </Router>
     </ThemeProvider>
+  );
+}
+
+function App() {
+  return (
+    <Provider store={store}>
+      <AppContent />
+    </Provider>
   );
 }
 
