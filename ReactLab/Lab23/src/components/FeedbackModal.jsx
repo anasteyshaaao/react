@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 const FeedbackModal = ({ 
@@ -12,12 +12,32 @@ const FeedbackModal = ({
   const { 
     register, 
     handleSubmit, 
-    formState: { errors } 
+    formState: { errors },
+    reset,
+    setValue
   } = useForm({
     defaultValues: {
-      name: userName
+      name: userName || '',
+      feedback: ''
     }
   });
+
+  // Обновляем значение имени при изменении userName
+  useEffect(() => {
+    if (userName) {
+      setValue('name', userName);
+    }
+  }, [userName, setValue]);
+
+  // Сбрасываем форму при открытии/закрытии модального окна
+  useEffect(() => {
+    if (showFeedbackModal) {
+      reset({
+        name: userName || '',
+        feedback: ''
+      });
+    }
+  }, [showFeedbackModal, userName, reset]);
 
   return (
     showFeedbackModal && (

@@ -17,11 +17,30 @@ import AdminPanel from './components/AdminPanel';
 
 function AppContent() {
   const dispatch = useDispatch();
-  const { isLoggedIn, userName, isAdmin } = useSelector(state => state.auth);
+  const { isLoggedIn, userName, isAdmin,isBlocked } = useSelector(state => state.auth);
 
   const handleLogout = () => {
     dispatch(logout());
   };
+
+  if (isLoggedIn && isBlocked) {
+    return (
+      <ThemeProvider>
+        <Router>
+          <Layout isLoggedIn={false} logout={handleLogout} userName="">
+            <Routes>
+              <Route path="*" element={
+                <div style={{ padding: '20px', textAlign: 'center' }}>
+                  <h2>Ваш аккаунт заблокирован</h2>
+                  <p>Обратитесь к администратору для разблокировки</p>
+                </div>
+              } />
+            </Routes>
+          </Layout>
+        </Router>
+      </ThemeProvider>
+    );
+  }
 
   return (
     <ThemeProvider>
@@ -31,7 +50,7 @@ function AppContent() {
             <Route
               path="/"
               element={
-                isLoggedIn ? (
+                isLoggedIn  && !isBlocked ? (
                   <>
                     <p>Стартовая страница</p>
                     <img src="/start.jpeg" alt="Описание картинки" />
@@ -50,7 +69,7 @@ function AppContent() {
             <Route
               path="/edit-profile"
               element={
-                isLoggedIn ? (
+                isLoggedIn  ? (
                   <EditProfilePage />
                 ) : (
                   <Navigate to="/auth" />

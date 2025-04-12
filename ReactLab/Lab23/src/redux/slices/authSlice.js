@@ -22,6 +22,7 @@ const authSlice = createSlice({
     userName: localStorage.getItem('userName') || '',
     userId: localStorage.getItem('userId') || '',
     isAdmin: localStorage.getItem('isAdmin') === 'true',
+    isBlocked: localStorage.getItem('isBlocked') === 'true', // Добавляем новое поле
     status: 'idle',
     error: null
   },
@@ -36,21 +37,25 @@ const authSlice = createSlice({
       state.userName = action.payload.name || '';
       state.userId = action.payload.id || '';
       state.isAdmin = Boolean(action.payload.isAdmin);
+      state.isBlocked = Boolean(action.payload.isBlocked); // Добавляем проверку блокировки
       
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('userName', state.userName);
       localStorage.setItem('userId', state.userId);
       localStorage.setItem('isAdmin', state.isAdmin.toString());
+      localStorage.setItem('isBlocked', state.isBlocked.toString()); // Сохраняем в localStorage
     },
     logout: (state) => {
       state.isLoggedIn = false;
       state.userName = '';
       state.userId = '';
       state.isAdmin = false;
+      state.isBlocked = false; // Сбрасываем статус блокировки
       localStorage.removeItem('isLoggedIn');
       localStorage.removeItem('userName');
       localStorage.removeItem('userId');
       localStorage.removeItem('isAdmin');
+      localStorage.removeItem('isBlocked');
     }
   },
   extraReducers: (builder) => {

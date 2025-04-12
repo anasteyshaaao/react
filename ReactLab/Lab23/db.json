@@ -4,26 +4,17 @@
       "id": "1",
       "name": "admin",
       "password": "admin123",
-      "isAdmin": true
-    },
-    {
-      "id": "641e",
-      "name": "Саша",
-      "password": "111111",
-      "email": "1rout@mail.ru"
+      "email": "2rout@mail.ru",
+      "isAdmin": true,
+      "isBlocked": false
     },
     {
       "id": "3592",
       "name": "ЕГОР1",
       "password": "111111",
       "email": "Egor@krut.ru",
-      "isAdmin": false
-    },
-    {
-      "id": "87ec",
-      "name": "Настя",
-      "password": "123456",
-      "email": "shemonaev@1rout.ru"
+      "isAdmin": false,
+      "isBlocked": false
     }
   ],
   "feedbacks": [
@@ -50,12 +41,6 @@
       "name": "Настя1234",
       "feedback": "Хороший сайт",
       "date": "2025-03-29T03:12:02.333Z"
-    },
-    {
-      "id": "f924",
-      "name": "Настя",
-      "feedback": "копуошугшаушоаоутоа",
-      "date": "2025-03-29T04:05:47.209Z"
     }
   ],
   "auth": {

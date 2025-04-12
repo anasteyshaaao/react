@@ -40,6 +40,11 @@ export const loginUser = createAsyncThunk(
       }
       
       const user = response.data[0];
+
+      // Проверяем, заблокирован ли пользователь
+      if (user.isBlocked) {
+        throw new Error('Ваш аккаунт заблокирован. Обратитесь к администратору.');
+      }
       
       return {
         id: user.id,
