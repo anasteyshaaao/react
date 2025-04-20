@@ -21,6 +21,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
+import { useDeleteFeedbackMutation } from './adminApi';
 
 const SortableHeader = ({ header }) => {
   const {
@@ -69,7 +70,18 @@ const SortableHeader = ({ header }) => {
   );
 };
 
-const AdminFeedbacksTable = ({ feedbacks, onDelete, loading, error }) => {
+const Spinner = () => (
+  <div className="text-center my-4">
+    <div className="spinner-border text-primary" role="status">
+      <span className="visually-hidden">Загрузка...</span>
+    </div>
+    <p className="mt-2">Загрузка отзывов...</p>
+  </div>
+);
+
+const AdminFeedbacksTable = ({ feedbacks, isLoading, isError, error }) => {
+  const [deleteFeedback] = useDeleteFeedbackMutation();
+
   const formatDate = (dateString) => {
     const options = { 
       year: 'numeric', 
@@ -79,6 +91,17 @@ const AdminFeedbacksTable = ({ feedbacks, onDelete, loading, error }) => {
       minute: '2-digit'
     };
     return new Date(dateString).toLocaleDateString('ru-RU', options);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Вы уверены, что хотите удалить этот отзыв?')) {
+      try {
+        await deleteFeedback(id);
+        // Данные автоматически обновятся благодаря invalidatesTags в adminApi
+      } catch (err) {
+        console.error('Ошибка при удалении отзыва:', err);
+      }
+    }
   };
 
   const columns = React.useMemo(() => [
@@ -119,7 +142,7 @@ const AdminFeedbacksTable = ({ feedbacks, onDelete, loading, error }) => {
       cell: ({ row }) => (
         <button
           className="btn btn-sm btn-outline-danger"
-          onClick={() => onDelete(row.original.id)}
+          onClick={() => handleDelete(row.original.id)}
           title="Удалить отзыв"
         >
           Удалить
@@ -127,7 +150,7 @@ const AdminFeedbacksTable = ({ feedbacks, onDelete, loading, error }) => {
       ),
       enableSorting: false,
     },
-  ], [onDelete]);
+  ], []);
 
   const [columnOrder, setColumnOrder] = React.useState(() => 
     columns.map(column => column.id)
@@ -166,21 +189,14 @@ const AdminFeedbacksTable = ({ feedbacks, onDelete, loading, error }) => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="text-center my-4">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Загрузка...</span>
-        </div>
-        <p className="mt-2">Загрузка отзывов...</p>
-      </div>
-    );
+  if (isLoading) {
+    return <Spinner />;
   }
 
-  if (error) {
+  if (isError) {
     return (
       <div className="alert alert-danger my-4">
-        Ошибка при загрузке отзывов: {error}
+        Ошибка при загрузке отзывов: {error.message || error.toString()}
       </div>
     );
   }

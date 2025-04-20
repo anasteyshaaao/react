@@ -17,7 +17,7 @@ const AuthForm = ({ isLogin, isProfileEdit = false }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { userName, userId } = useSelector(state => state.auth);
-  const apiError = useSelector(state => state.api.error);
+  const apiError = useSelector(state => state.api?.error || '');
   const [formError, setFormError] = React.useState('');
 
   React.useEffect(() => {

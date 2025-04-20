@@ -5,8 +5,7 @@ import {
   flexRender,
   getSortedRowModel,
 } from '@tanstack/react-table';
-import { useDispatch, useSelector } from 'react-redux';
-import { deleteUser, toggleBlockUser } from '../redux/slices/usersSlice';
+import { useSelector } from 'react-redux';
 import {
   DndContext,
   closestCenter,
@@ -23,6 +22,10 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
+import { 
+  useDeleteUserMutation, 
+  useToggleBlockUserMutation 
+} from './adminApi';
 
 const SortableHeader = ({ header }) => {
   const {
@@ -71,10 +74,10 @@ const SortableHeader = ({ header }) => {
   );
 };
 
-const AdminUsersTable = () => {
-  const dispatch = useDispatch();
-  const { items: users = [], loading, error } = useSelector(state => state.users);
+const AdminUsersTable = ({ users }) => {
   const { isAdmin } = useSelector(state => state.auth);
+  const [deleteUser] = useDeleteUserMutation();
+  const [toggleBlockUser] = useToggleBlockUserMutation();
 
   const columns = React.useMemo(() => [
     {
@@ -113,21 +116,21 @@ const AdminUsersTable = () => {
       },
     },
     {
-     id: 'admin',
-    header: 'Админ',
-    accessorKey: 'isAdmin',
-    cell: ({ getValue }) => (
-      <span className={`badge ${getValue() ? 'bg-primary' : 'bg-secondary'}`}>
-        {getValue() ? 'Да' : 'Нет'}
-      </span>
-    ),
-    enableSorting: true,
-    sortingFn: (rowA, rowB, columnId) => {
-      const a = rowA.getValue(columnId);
-      const b = rowB.getValue(columnId);
-      if (a === b) return 0;
-      return a ? -1 : 1; // Админы сначала
-    },
+      id: 'admin',
+      header: 'Админ',
+      accessorKey: 'isAdmin',
+      cell: ({ getValue }) => (
+        <span className={`badge ${getValue() ? 'bg-primary' : 'bg-secondary'}`}>
+          {getValue() ? 'Да' : 'Нет'}
+        </span>
+      ),
+      enableSorting: true,
+      sortingFn: (rowA, rowB, columnId) => {
+        const a = rowA.getValue(columnId);
+        const b = rowB.getValue(columnId);
+        if (a === b) return 0;
+        return a ? -1 : 1; // Админы сначала
+      },
     },
     {
       id: 'actions',
@@ -136,9 +139,15 @@ const AdminUsersTable = () => {
         <div className="d-flex gap-2">
           <button
             className="btn btn-sm btn-outline-danger"
-            onClick={() => {
+            onClick={async () => {
               if (window.confirm('Удалить пользователя?')) {
-                dispatch(deleteUser(row.original.id));
+                try {
+                  await deleteUser(row.original.id);
+                // Автоматическое обновление благодаря invalidatesTags
+                // в определении мутации
+                } catch (error) {
+                  console.error('Ошибка при удалении:', error);
+                }
               }
             }}
             disabled={row.original.isAdmin}
@@ -147,7 +156,17 @@ const AdminUsersTable = () => {
           </button>
           <button
             className={`btn btn-sm ${row.original.isBlocked ? 'btn-success' : 'btn-warning'}`}
-            onClick={() => dispatch(toggleBlockUser(row.original.id))}
+            onClick={async () => {
+              try {
+                await toggleBlockUser({ 
+                  id: row.original.id, 
+                  isBlocked: !row.original.isBlocked 
+                });
+                // Автоматическое обновление благодаря invalidatesTags
+              } catch (error) {
+                console.error('Ошибка при изменении статуса:', error);
+              }
+            }}
             disabled={row.original.isAdmin}
           >
             {row.original.isBlocked ? 'Разблокировать' : 'Заблокировать'}
@@ -156,7 +175,7 @@ const AdminUsersTable = () => {
       ),
       enableSorting: false,
     },
-  ], [dispatch]);
+  ], [deleteUser, toggleBlockUser]);
 
   const [columnOrder, setColumnOrder] = React.useState(() => 
     columns.map(column => column.id)
@@ -197,24 +216,6 @@ const AdminUsersTable = () => {
 
   if (!isAdmin) {
     return <div className="alert alert-warning">Требуются права администратора</div>;
-  }
-
-  if (loading) {
-    return (
-      <div className="text-center my-4">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Загрузка...</span>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="alert alert-danger my-4">
-        Ошибка загрузки пользователей: {error}
-      </div>
-    );
   }
 
   return (
